@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+       name="Test"
+       transports="vfs"
+       statistics="disable"
+       trace="disable"
+       startOnLoad="true">
+   <target>
+      <inSequence>
+         <property name="OUT_ONLY" value="true" scope="default" type="STRING"/>
+         <property name="transport.vfs.ReplyFileName"
+                   expression="get-property('transport','FILE_NAME')"
+                   scope="transport"
+                   type="STRING"/>
+         <log level="full"/>
+         <send>
+            <endpoint>
+               <address uri="vfs:file:///home/yasassri/Desktop/vfs-test/out"/>
+            </endpoint>
+         </send>
+      </inSequence>
+   </target>
+   <parameter name="transport.PollInterval">5</parameter>
+   <parameter name="transport.vfs.FileURI">/home/yasassri/Desktop/vfs-test/in</parameter>
+   <parameter name="transport.vfs.FileNamePattern">.*\.txt</parameter>
+   <parameter name="transport.vfs.ContentType">text/plain</parameter>
+   <description/>
+</proxy>
