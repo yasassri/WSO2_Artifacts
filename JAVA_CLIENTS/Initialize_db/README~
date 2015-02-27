@@ -1,0 +1,7 @@
+How to Run
+
+1. Add the necessary sql queries you need to run in the script.sql file in the root.
+2. Now open "src/clusterDB.java" and add database URL and necessary credentials (Username & Password)
+3. Now navigate to the root directory and execute the command "ant" (Make sure you have appache ant installed)
+
+
