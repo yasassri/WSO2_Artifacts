@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CEP Fleet Management Sample</title>
+
+<!-- Core CSS - Include with every page -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="css/leaflet.css" />
+
+<!-- Page-Level Plugin CSS - Blank -->
+
+<link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body style="background-color: white;">
+
+	<div id="wrapper" style="background-color: #EBD6EB;">
+
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+			style="background-color: #000000;">
+			<div class="navbar-header" style="background-color: #000000;">
+				<img src="images/wso2.jpg" alt=""> <font size="5"
+					color="white">COMPLEX EVENT PROCESSOR</font>
+			</div>
+			<!-- /.navbar-header -->
+
+			<ul class="nav navbar-top-links navbar-right">
+				<br>
+				<p>WSO2-COMPLEX EVENT PROCESSOR</p>
+				<!-- /.dropdown -->
+			</ul>
+			<!-- /.navbar-top-links -->
+
+			<div class="navbar-default navbar-static-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="sidebar-search">
+							<div class="input-group custom-search-form">
+								<h3>Admin Panel</h3>
+							</div> <!-- /input-group -->
+						</li>
+						<li><a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>
+								Display Settings<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+
+								<li>
+									<table style="right-padding: 10px">
+										<tr>
+											<td style="padding: 5px;"><a
+												style="text-decoration: none">Draw Paths : &nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"><input id="drawPath"
+												type="checkbox" name="drawPath"></td>
+											<td><button type="button"
+													class="btn btn-outline btn-success btn-xs"
+													onclick="checkCheckBox();">DRAW</button></td>
+										</tr>
+									</table>
+								</li>
+								<li>
+									<table style="right-padding: 10px">
+										<tr>
+											<td style="padding: 5px;"><a
+												style="text-decoration: none">Clear All Paths :
+													&nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"></td>
+											<td style="padding: 5px;"><button type="button"
+													class="btn btn-outline btn-warning btn-xs"
+													onclick="clearMarkers();">CLEAR</button></td>
+										</tr>
+									</table>
+								</li>
+							</ul> <!-- /.nav-second-level --></li>
+
+						<li><a href="#"><i class="fa fa-dashboard fa-fw"></i>
+								Enable Alerts<span class="fa arrow"></span></a>
+
+							<ul class="nav nav-second-level">
+								<li>
+									<table>
+										<tr>
+											<td><a style="text-decoration: none">Speed Alert :
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"><input id="maxSpeed"
+												type="checkbox" name="maxSpeed"
+												onclick="checkBoxChecker(this.id); followScenario(this.id); "></td>
+										</tr>
+									</table>
+								</li>
+
+
+
+								<li>
+									<table>
+										<tr>
+											<td><a style="text-decoration: none">Stationary
+													Alert : &nbsp;&nbsp;&nbsp;
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"><input id="maxStationed"
+												type="checkbox" name="maxStationed"
+												onclick="checkBoxChecker(this.id); followScenario(this.id); "></td>
+										</tr>
+									</table>
+								</li>
+
+								<li>
+									<table>
+										<tr>
+											<td><a style="text-decoration: none">Proximity Alert
+													:
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"><input id="proximity"
+												type="checkbox" name="proximity"
+												onclick="checkBoxChecker(this.id); followScenario(this.id); "></td>
+										</tr>
+									</table>
+
+								</li>
+
+								<li>
+									<div class="well well-sm">
+										<table>
+											<tr>
+												<td><h5>&nbsp;&nbsp;Focus on Device</h5></td>
+												<td>&nbsp;&nbsp;&nbsp;&nbsp;<input id="showAlert"
+													name="showAlert" type="checkbox"
+													onclick="followScenario();" checked></td>
+											</tr>
+										</table>
+
+									</div>
+								</li>
+
+
+
+							</ul> <!-- /.nav-second-level --></li>
+
+						<li><a href="#"><i class="fa fa-wrench fa-fw"></i>
+								Advanced Options<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+
+								<li>
+									<table style="right-padding: 10px">
+										<tr>
+
+											<td style="padding: 5px;"><input id="followID"
+												class="form-control" placeholder="Enter ID"></td>
+
+											<td><input id="followId" type="checkbox" name="drawPath"
+												disabled="disabled"></td>
+
+											<td style="padding: 5px;"><button type="button"
+													class="btn btn-outline btn-info"
+													onclick="followID(); checkBoxFollow();">Follow</button></td>
+										</tr>
+									</table>
+								</li>
+								<li>
+									<table style="right-padding: 10px">
+										<tr>
+											<td style="padding: 5px;"><a
+												style="text-decoration: none">Reset Map : &nbsp;&nbsp;</a></td>
+											<td style="padding: 5px;"><button type="button"
+													class="btn btn-outline btn-info" onclick="resetMap();">Reset</button></td>
+										</tr>
+									</table>
+								</li>
+
+							</ul> <!-- /.nav-second-level --></li>
+
+						<li class="sidebar-search">
+
+							<div>
+								<div class="input-group custom-search-form">
+									<h3>Sample Guide</h3>
+								</div>
+
+								<li><a href="#"><i class="fa fa-wrench fa-fw"></i>
+										Guides<span class="fa arrow"></span></a>
+									<ul class="nav nav-second-level">
+
+
+										<li class="sidebar-search">
+											<button class="btn btn-primary btn-sm btn-block"
+												data-toggle="modal" data-target="#sample">Sample
+												Overview</button>
+										</li>
+
+										<li class="sidebar-search">
+											<button class="btn btn-primary btn-sm btn-block"
+												data-toggle="modal" data-target="#ui">UI Guide</button>
+										</li>
+
+										<li class="sidebar-search">
+											<button class="btn btn-primary btn-sm btn-block"
+												data-toggle="modal" data-target="#speed">Speed
+												Alarm</button>
+										</li>
+
+
+										<li class="sidebar-search">
+											<button class="btn btn-primary btn-sm btn-block"
+												data-toggle="modal" data-target="#stationed">
+												Stationary Alarm</button>
+										</li>
+
+										<li class="sidebar-search">
+
+											<button class="btn btn-primary btn-sm btn-block"
+												data-toggle="modal" data-target="#proxy">Proximity
+												Alarm</button>
+										</li>
+
+
+									</ul></li>
+								<li class="sidebar-search">
+									<div class="input-group custom-search-form">
+										<h3>Marker Legend</h3>
+									</div>
+
+
+									<table style="border: 1px solid black;">
+										<tr>
+											<td style="padding: 10px;">Normal :</td>
+											<td style="padding: 2px;">&nbsp;<img
+												src="images/marker-icon.png" alt="" height="25">
+											</td>
+										</tr>
+										<tr>
+											<td style="padding: 10px;">Speed Alerted :</td>
+											<td style="padding: 2px;"><img
+												src="images/pinkMarker.png" alt="" height="25" width="25"></td>
+										</tr>
+										<tr>
+											<td style="padding: 10px;">Stationary Alerted :</td>
+											<td style="padding: 2px;"><img
+												src="images/redMarker.png" alt="" height="25" width="25"></td>
+										</tr>
+
+										<tr>
+											<td style="padding: 10px;">Proximity Alerted :</td>
+											<td style="padding: 2px;">&nbsp;<img
+												src="images/greenMarker.png" alt="" height="25">
+											</td>
+										</tr>
+									</table>
+								</li>
+
+							</div>
+						</li>
+					</ul>
+
+				</div>
+				<!-- /.sidebar-collapse -->
+			</div>
+			<!-- /.navbar-static-side -->
+		</nav>
+
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Fleet Management Sample</h1>
+
+				</div>
+
+				<!-- /.col-lg-12 -->
+			</div>
+
+			<table>
+
+				<div class="modal fade" id="ui" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 850px;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">UI Guide</h4>
+							</div>
+							<div class="modal-body">
+								<h4>Description</h4>
+								The UI is developped using HTML5 websockets hence it will update
+								automatically when a message is recieved. <br>
+								<h4>UI Layout</h4>
+								<img alt="" src="images/ui.png"> <br> <br> [1]
+								--> Display Settings<br> [2] --> Enable Alerts<br> [3]
+								--> Advance Options<br> [4] --> Guids<br> [5] --> Map
+								Options<br> [6] --> Device Detail Console<br> [7] -->
+								Connected Device Output Console<br> [8] --> Stream Output
+								Console<br> [9] --> Alerted Vehicle Output console<br>
+								[10] --> Map Console<br> <br> <br>
+
+
+								<h4>Function Description</h4>
+
+								<h5>Display Settings</h5>
+								<div style="width: 50%; margin: 0 auto;">
+									<img alt="" src="images/display.png">
+								</div>
+
+								<br> Draw Path : Draws the route/path of the device.<br>
+								Clear Paths : Clears all the drawn paths. <br> <br>
+								<h5>Enable Alerts</h5>
+								<div style="width: 50%; margin: 0 auto;">
+									<img alt="" src="images/alerts.png">
+								</div>
+
+
+								<br> Speed Alert : Enables speed alert Scenario <br>
+								Stationary Alert : Enables Stationary alert scenario <br>
+								Proximity alert : Enables proximity alert scenario. <br>
+								Show me the scenario : Will maintain the view focus and show
+								details of a specified device to demonstrate each scenario. <br>
+								<br>
+								<h5>Advance Options</h5>
+								<div style="width: 50%; margin: 0 auto;">
+									<img alt="" src="images/advance.png">
+								</div>
+
+								<br> FollowID : maintain the focuss on the specified device
+								Reset Map : Resets the map <br> <br>
+								<h5>Sample Guide</h5>
+								<div style="width: 50%; margin: 0 auto;">
+									<img alt="" src="images/guide.png">
+								</div>
+
+								<br> Sample Guides : Contains detaled descriptions on
+								sample scenarios and about the sample. <br> <br>
+								<h5>MAP Options</h5>
+								<div style="width: 50%; margin: 0 auto;">
+									<img alt="" src="images/map.png">
+								</div>
+
+								<br> Map : Will output the device locations and their alert
+								states. <br> Select Maps : Change the map <br> Select
+								layers : Select the desired layers on the map. <br> <br>
+								<br> Connected Device Id console : Outputs a list of newly
+								connected devices Output console : Outputs the messages recived
+
+								Clear Console : Clears the output console. View Device Details :
+								Shows location and speed details of a specified device. Enable
+								Graph : Enable speed Graph for specified device. Clear Graph :
+								Clears the speed graph Alerted Vehicle IDs : Get the list of all
+								the Alerted vehicle ID and alert recorded location. <br>
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+
+
+				<div class="modal fade" id="proxy" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 800px;">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Proximity Alarm
+									Scenario</h4>
+							</div>
+							<div class="modal-body">
+								<h4>Description</h4>
+								In this sccenario CEP will trigger an alert if two or more
+								devices move in close proximity for a defined distance. It first
+								checks whether either of the devices are stationary, to
+								eliminate the possibility of the alarm triggering while either
+								of the objects is stationary. <br>
+								<h4>CEP Flow</h4>
+								> CEP will deferentiate realtime messages and batched messages
+								from the incoming data feed and add them to two different queus.
+								<br> > CEP will then check whether the two devices are
+								stationed or not. > CEP checks whether the two devices are
+								within defined proximity for a defined distance window and
+								triggers a flag. <br>
+								<h4>CEP Flow Diagram</h4>
+								<img alt="" src="images/proximity.png"> <br>
+								<h4>UI Output</h4>
+
+								If the proximity alert is triggered the markers of relevent
+								devices will change to green, and a circle will be drawn to
+								highlight the devices.
+
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+
+				<div class="modal fade" id="sample" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 880px">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Sample Overview</h4>
+							</div>
+							<div class="modal-body">
+								<h4>Description</h4>
+
+								The sample consists of three main components, the GPS stream
+								generator, CEP(Complex Event Processor) message processing and
+								the UI thats outputs all the information. The sample is build
+								using latest technologies like HTML5 websockets and it is
+								implemented with <a href="http://jaggeryjs.org/" target="_blank">Jaggery
+									framework.</a> <br>
+								<h4>Sample Flow Overview</h4>
+								<img src="images/sampleFlow.png"
+									alt="CEP Flow for Stationary Alert">
+								<p>As depicted above the input stream generator will read
+									from muntiple input files where each file will act as a single
+									device and will contain the cordinates of device's route, and
+									fill generate a concurrent GPS streams and direct it to CEP.
+									CEP will do all the processing that is required to generate
+									intended outputs and alerts and insert them into two different
+									ActiveMQ queues, the message consumer will pull these messages
+									when ever they are available in the queue and will push them to
+									socket server which is already hosted in CEP. The socket server
+									will then broadcast the messages to all active session members
+									and the corresponding UI will output the stream.</p>
+
+								<br>
+								<h4>CEP Flow Overview</h4>
+								<img src="images/generalFlow.png"
+									alt="CEP Flow for Stationary Alert">
+								<p>As depicted above initially CEP will deferentiate the
+									incomming messages considering whether the message is a
+									realtime message or whether it is a batched message. This is
+									done by comparing the time stamps of the messages. Then CEP
+									will process the messages and will grenerate alerts as required
+									and will output the data stream.</p>
+
+
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+
+				<div class="modal fade" id="speed" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 800px">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Speed Alarm
+									Scenario</h4>
+							</div>
+							<div class="modal-body">
+								<h4>Description</h4>
+
+								A simple scenario to trigger an alert when a device exceeds a
+								predefined maximum speed. <br>
+								<h4>CEP Flow</h4>
+								> The CEP will deferentiate realtime messages and batched
+								messages from the incoming data feed and add them to two
+								different queus. <br> > The CEP will then check whether the
+								speed is within the limit or not and it will trigger the alert
+								accordingly. (In this sample the speed limit is set to 5#### and
+								it can be changed in the execution plan in the sample folder.) <br>
+								<h4>CEP Flow Diagram</h4>
+								<br> <img alt="" src="images/speed.png"> <br>
+								<h4>UI Output</h4>
+
+								If the Speed Alert is is enabled the application will indicate
+								over speeding by changing the color of the marker to Pink, and
+								if "Draw path" option is enabled it will Draw the path of the
+								device and the color of the path will change from Green to Red
+								when the speed is over the limit.
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+
+
+				<div class="modal fade" id="stationed" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width: 1000px">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Stationed Alarm
+									Scenario</h4>
+							</div>
+							<div class="modal-body">
+								<h4>Description</h4>
+
+								A simple demonstration on how to differentiate the batch inputs
+								vs the real time inputs from a GPS stream and perform a
+								stationary check (Check whether a device is within a given
+								buffer zone(s) stationed over a defined period of time). These
+								locations need to be fed to the execution plan in the form of a
+								GeoJSON point set. A sidhdhi extension performs a GeoTools
+								within check for the input stream for each of the points
+								provided and the siddhi query outputs a stationary flag if the
+								device is in the given location for more than 10 seconds with
+								the buffer zone location. You can change this time window in the
+								execution plan of the sample.
+
+								<h4>CEP Flow</h4>
+
+								> The CEP will deferentiate realtime messages and batched
+								messages from the incoming data feed and add them to two
+								different queus. <br> > The CEP will then check whether the
+								speed is within the limit or not and it will trigger the alert
+								accordingly. (In this sample the speed limit is set to 5#### and
+								it can be changed in the execution plan in the sample folder.) <br>
+								<h4>CEP Flow Diagram</h4>
+
+								<img alt="" src="images/stationaryFlowCEP.png">
+
+								<h4>UI Output</h4>
+
+								If the stationary Alert is enabled, the application will
+								indicate the relevent device as a marker and the bufferzone in
+								the UI console, the marker colour will change to red.
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<tr>
+					<td>
+
+						<div class="col-lg-4" style="width: 1131px">
+							<div class="panel panel-info">
+								<div class="panel-heading">MAP</div>
+								<div class="panel-body" align="center" style="padding: 0px">
+									<div id="map" style="width: 1100px; height: 600px"></div>
+								</div>
+								<div class="panel-footer">
+									<h4>Connected Device IDs</h4>
+									<textarea class="form-control" id="idListArea" readonly></textarea>
+									<h4>Output Console</h4>
+
+									<textarea class="form-control" id="messagesTextArea" rows="17"
+										cols="150" readonly></textarea>
+
+									<br>
+
+									<button type="button" class="btn btn-primary"
+										onclick="messagesTextArea.value=null;">Clear Console</button>
+
+									<!--<input id="button1" type="button" value="Disconnect from Server" onclick="sendMessage();"> -->
+
+								</div>
+							</div>
+						</div>
+
+					</td>
+
+					<td>
+
+
+						<div class="col-lg-4" style="width: 350px">
+
+							<div class="panel panel-primary">
+								<table style="right-padding: 10px">
+
+									<tr>
+										<div class="panel-heading">Device Detail Window</div>
+										<td style="padding: 5px;"><input class="form-control"
+											id="itemToShowDetails" placeholder="Enter ID"></td>
+
+										<td style="padding: 5px;"><button type="button"
+												class="btn btn-outline btn-info" onclick="showDetails();">VIEW</button></td>
+									</tr>
+								</table>
+								<div class="panel-heading">Location & Speed Info</div>
+								<div class="panel-body">
+									<textarea class="form-control" id="showDetailsText" rows="10"
+										cols="80" readonly></textarea>
+									<br> <input type="button" class="btn btn-primary"
+										value="Enable Graph" onclick="enableGraph();"> <input
+										type="button" class="btn btn-primary" value="Clear Grapph"
+										onclick="ini();">
+								</div>
+								<div class="panel-footer">
+									<div id="container" style="height: 300px; width: 300px"></div>
+								</div>
+							</div>
+
+							<div class="panel panel-primary">
+
+								<div class="panel-heading">Alerted Vehicle IDs</div>
+								<div class="panel-body">
+									<p>
+										<textarea class="form-control" id="alertDetails" rows="8"
+											cols="80" readonly></textarea>
+									</p>
+								</div>
+								<div class="panel-footer">
+
+									<div class="form-group">
+										<label>Select Alert</label>
+										<div class="radio">
+											<label> <input type="radio" name="optionsRadios"
+												id="optionsRadios1" value="1" checked>Speed Alert
+											</label>
+										</div>
+										<div class="radio">
+											<label> <input type="radio" name="optionsRadios"
+												id="optionsRadios2" value="2">Proximity Alert
+											</label>
+										</div>
+										<div class="radio">
+											<label> <input type="radio" name="optionsRadios"
+												id="optionsRadios3" value="3">Stationed Alert
+											</label>
+										</div>
+										<button type="button" class="btn btn-primary"
+											onclick="getDetails();">Get Details</button>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</td>
+				</tr>
+
+			</table>
+
+			<!-- /.row -->
+		</div>
+		<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
+
+	<!-- Core Scripts - Include with every page -->
+	<script src="js/leaflet.js"></script>
+	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="js/histock.js"></script>
+	<!-- Page-Level Plugin Scripts - Blank -->
+	<script src="js/sb-admin.js"></script>
+
+
+	<script>
+		//Creating a Layers for the markers and Polylines and Creating the Main map
+
+		var markerLayer = new L.layerGroup();
+		var polylineLayer = new L.layerGroup();
+		var bufferLayer = new L.layerGroup();
+
+		var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, '
+				+ '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, '
+				+ 'Imagery © <a href="http://mapbox.com">Mapbox</a>', mbUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png';
+
+		var grayscale = L.tileLayer(mbUrl, {
+			id : 'examples.map-20v6611k',
+			attribution : mbAttr
+		}), streets = L.tileLayer(mbUrl, {
+			id : 'examples.map-i86knfo3',
+			attribution : mbAttr
+		});
+
+		var map = L.map('map', {
+			center : [ 6.88869, 79.85878 ],
+			zoom : 13,
+			layers : [ streets, markerLayer, polylineLayer ]
+		});
+
+		var baseLayers = {
+			"Grayscale" : grayscale,
+			"Streets" : streets
+		};
+
+		var overlays = {
+			"Marker Layer" : markerLayer,
+			"Path Layer" : polylineLayer,
+			"Buffers Layer" : bufferLayer
+		};
+
+		L.control.layers(baseLayers, overlays).addTo(map);
+	</script>
+
+	<script type="text/javascript">
+		/*var j =1;
+		var i =1.0;
+		function myLoop2() { //  create a loop function
+			setTimeout(function() {
+				
+				i+=0.001;		
+				map.zoomIn(i,true)
+				j++; //  increment the counter
+				if (j < 100) { //  if the counter < 10, call the loop function
+					myLoop2(); //  ..  again which will trigger another 
+				} //  ..  setTimeout()
+			}, 1000)
+		}
+
+		myLoop2(); */
+	</script>
+
+	<script type="text/javascript">
+		//testing Loop
+		var j = 0;
+		var lat = 6.88869;
+		var lon = 79.85878;
+		var speedflag = "false";
+
+		function myLoop() { //  create a loop function
+			setTimeout(function() {
+
+				lat = lat + 0.0001;
+				lon = lon + 0.0001;
+
+				lat2 = lat + 0.0001;
+				lon2 = lon + 0.0002;
+
+				var id = Math.floor((Math.random() * 2) + 1);
+
+				if (j % 5 == 0) {
+					speedflag = "false";
+
+				} else {
+
+					speedflag = "true";
+				}
+				mapUpdater("" + id, lat, lon, "40", speedflag, speedflag,
+						"true");
+
+				j++; //  increment the counter
+				if (j < 100) { //  if the counter < 10, call the loop function
+					myLoop(); //  ..  again which will trigger another 
+				} //  ..  setTimeout()
+			}, 500)
+		}
+
+		//myLoop();
+	</script>
+
+	<script type="text/javascript">
+		//Marker Icon List Class
+
+		var markers = L.Icon.extend({
+			options : {
+				shadowUrl : 'images/marker-shadow.png',
+
+				iconSize : [ 41, 41 ],
+				shadowSize : [ 41, 41 ],
+				iconAnchor : [ 20, 40 ],
+				shadowAnchor : [ 10, 40 ],
+				popupAnchor : [ 0, -30 ]
+			}
+		});
+
+		var defIcon = L.Icon.Default.extend({
+			options : {
+				iconUrl : 'images/marker-icon.png'
+			}
+		});
+		var DefIcon = new defIcon();
+
+		var pinkIcon = new markers({
+			iconUrl : 'images/pinkMarker.png'
+		}), redIcon = new markers({
+			iconUrl : 'images/redMarker.png'
+		}), greenIcon = new markers({
+			iconUrl : 'images/greenMarker.png'
+		});
+	</script>
+
+	<script type="text/javascript">
+		//Main Map Related Scripts
+		var idList = [];
+		var stationedList = [];
+		var speedAlertedlist = [];
+		var proxymintyList = [];
+		var bufferList = [];
+		var showDetailFlag = false;
+		//var mark;
+		//var poly;
+
+		var websocket = new WebSocket(
+				'ws://localhost:9763/CEP_DeviceTracking_Sample/server.jag');
+
+		websocket.onopen = function() {
+			messagesTextArea.value += "System : You Are Connected to Map Server!!\n";
+		};
+
+		websocket.onmessage = function processMessage(message) {
+
+			var jsonData = JSON.parse(message.data);
+
+			var id = jsonData.event.payloadData.id;
+			var lat = jsonData.event.payloadData.lat;
+			var lon = jsonData.event.payloadData.longitude;
+			var speed = jsonData.event.payloadData.speed;
+			var speedFlag = jsonData.event.payloadData.speedFlag;
+			var stationFlag = jsonData.event.payloadData.withinTime;
+			var point = jsonData.event.payloadData.withinPoint;
+			var res = point.split(",");
+			bufferLat = res[1];
+			bufferLon = res[0];
+			var proximity1 = jsonData.event.payloadData.proximity;
+
+			if (proximity1 != "false" && proximity1 != null) {
+				var proxList = proximity1.split(",");
+				var proximityFlag = proxList[0];
+				proxCloseId = proxList[1];
+			}
+
+			messagesTextArea.value += "ID : " + id + " Longtitute : " + lon
+					+ " Latitude : " + lat + "\n";
+			var textarea = document.getElementById('messagesTextArea');
+			textarea.scrollTop = textarea.scrollHeight;
+
+			mapUpdater(id, lat, lon, speed, speedFlag, stationFlag,
+					proximityFlag);
+
+		}
+
+		function checkCheckBox() {
+
+			var check = document.getElementById("drawPath");
+			if (check.checked == true) {
+				check.checked = false;
+			} else {
+				check.checked = true;
+			}
+		}
+
+		var greenPolyAdded = false;
+		var lastLatLng = null;
+		var bufferLat = 10;
+		var bufferLon = 10;
+		var proxCloseId = 101010;
+
+		function mapUpdater(id, lat, lon, speed, speedFlag, stationedFlag,
+				proximityFlag) {
+
+			var markerCheck = false;
+			var spdflg = document.getElementById("maxSpeed");
+			var stationedMaxTime = document.getElementById("maxStationed");
+			var proxi = document.getElementById("proximity");
+			var len = null;
+			var poly = null;
+			var mark = null;
+
+			//Adding The Markers and PolyLines
+			if (idList.length == 0) {
+
+				mark = L.marker([ lat, lon ]).bindPopup("Vehicle ID : " + id, {
+					autoPan : false
+				});
+				markerLayer.addLayer(mark);
+				poly = L.polyline([], {
+					color : 'green'
+				});
+				polylineLayer.addLayer(poly).addTo(map);
+
+				idList.push([ id, mark, poly, false ]);
+
+				idListArea.value += id + ", ";
+				return;
+			}
+
+			for (var i = idList.length; i > 0; i--) {
+
+				if (id == idList[i - 1][0]) {
+					len = i - 1;
+					break;
+
+				}
+				// If the ID is not in the list initiate new entry
+				else if ((i - 1) == 0) {
+
+					mark = L.marker([ lat, lon ]).bindPopup(
+							"Vehicle ID : " + id, {
+								autoPan : false
+							});
+					markerLayer.addLayer(mark);
+					poly = L.polyline([], {
+						color : 'green'
+					});
+					polylineLayer.addLayer(poly).addTo(map);
+					len = idList.length - 1;
+
+					idList.push([ id, mark, poly, false ]);
+					idListArea.value += id + ", ";
+					return;
+				}
+			}
+
+			// Checking for the Stationry Scenario
+			if (stationedMaxTime.checked && stationedFlag == "true") {
+
+				if (len != null) {
+
+					//Adding the buffers first
+					if (bufferList.length == 0) {
+
+						//The radius is fixed 20m
+						var circle = L.circle([ bufferLat, bufferLon ], 20, {
+							color : 'black',
+							fillColor : '#f03',
+							fillOpacity : 0.3
+						}).bindPopup(
+								"Location(Lat & Lon) of Buffer : " + bufferLat
+										+ " : " + bufferLon);
+
+						bufferLayer.addLayer(circle).addTo(map);
+						bufferList.push([ bufferLat, bufferLon, circle ]);
+
+					}
+
+					else {
+
+						for (var k = bufferList.length; k > 0; k--) {
+							if (bufferList[k - 1][0] == bufferLat
+									&& bufferList[k - 1][1] == bufferLon) {
+								break;
+							} else if (k - 1 == 0) {
+
+								var circle = L.circle([ 6.88985, 79.85882 ],
+										20, {
+											color : 'black',
+											fillColor : '#f03',
+											fillOpacity : 0.3
+										}).bindPopup(
+										"Lat,Lon of Buffer : " + bufferLat
+												+ " : " + bufferLon);
+
+								bufferLayer.addLayer(circle).addTo(map);
+								bufferList
+										.push([ bufferLat, bufferLon, circle ]);
+
+							}
+
+						}
+					}
+
+					if (stationedList.length == 0) {
+						stationedList.push([ id, bufferLat, bufferLon ]);
+
+					}
+
+					else {
+						for (var k = stationedList.length; k > 0; k--) {
+							if (id == stationedList[k - 1][0]) {
+								stationedList[k - 1][1] = bufferLat;
+								stationedList[k - 1][2] = bufferLon;
+								break;
+							}
+							if (k - 1 == 0) {
+								stationedList
+										.push([ id, bufferLat, bufferLon ]);
+							}
+						}
+
+					}
+
+					idList[len][1].setIcon(redIcon).addTo(map);
+
+				}
+				markerCheck = true;
+			}
+
+			//Checking for the proximity Scenario
+
+			if (proxi.checked && proximityFlag == "true") {
+
+				// Adding to The proximity Alerted List
+				if (proxymintyList.length == 0) {
+					proxymintyList.push([ id, lat, lon, proxCloseId ]);
+
+				}
+
+				else {
+					for (var k = proxymintyList.length; k > 0; k--) {
+						if (id == proxymintyList[k - 1][0]) {
+							proxymintyList[k - 1][1] = lat;
+							proxymintyList[k - 1][2] = lon;
+							proxymintyList[k - 1][3] = proxCloseId;
+							break;
+						}
+						if (k - 1 == 0) {
+							proxymintyList.push([ id, lat, lon, proxCloseId ]);
+						}
+					}
+				}
+				idList[len][1].setIcon(greenIcon).addTo(map);
+				markerCheck = true;
+
+			}
+
+			// Checking the speed Scenario
+
+			if (spdflg.checked && speedFlag == "true") {
+
+				//Adding to speed Alert List
+				if (speedAlertedlist.length == 0) {
+					speedAlertedlist.push([ id, lat, lon ]);
+
+				}
+
+				else {
+					for (var k = speedAlertedlist.length; k > 0; k--) {
+						if (id == speedAlertedlist[k - 1][0]) {
+							speedAlertedlist[k - 1][1] = lat;
+							speedAlertedlist[k - 1][2] = lon;
+							break;
+						}
+						if (k - 1 == 0) {
+							speedAlertedlist.push([ id, lat, lon ]);
+						}
+					}
+				}
+
+				idList[len][1].setIcon(pinkIcon);
+
+				if (idList[len][3] == false) {
+
+					idList[len][2].addLatLng([ lat, lon ]);
+					poly = L.polyline([], {
+						color : 'Red'
+					});
+					polylineLayer.addLayer(poly).addTo(map);
+					idList[len][2] = poly;
+					idList[len][3] = true;
+
+				}
+				markerCheck = true;
+
+			} else {
+				if (idList[len][3] == true) {
+					idList[i - 1][2].addLatLng([ lat, lon ]);
+					poly = L.polyline([], {
+						color : 'Green'
+					});
+					polylineLayer.addLayer(poly).addTo(map);
+					idList[len][2] = poly;
+					idList[len][3] = false;
+
+				}
+
+			}
+			if (!markerCheck) {
+				idList[len][1].setIcon(DefIcon);
+			}
+
+			idList[len][1].setLatLng([ lat, lon ]).update(); // updating the marker
+
+			if (document.getElementById('drawPath').checked) {
+				idList[len][2].addLatLng([ lat, lon ]); // updating the poly-line
+
+			}
+
+			if (showDetailFlag && showDetailId == id) {
+
+				showDetailsUpdater(id, lon, lat, speed);
+			}
+
+			if (document.getElementById("followId").checked
+					&& document.getElementById("followID").value == id) {
+				map.panTo([ lat, lon ], {
+					duration : 0.5
+				});
+
+			}
+
+		}
+
+		function clearMarkers() {
+
+			polylineLayer.clearLayers();
+
+			for (var i = idList.length; i > 0; i--) { // Re adding the polylines since clear Layers remove all the objects
+				poly = L.polyline([], {
+					color : 'green'
+				});
+				polylineLayer.addLayer(poly).addTo(map);
+				idList[i - 1][2] = poly;
+
+			}
+		}
+
+		function followID() {
+
+			var id = document.getElementById("followID").value;
+
+			if (id != "") {
+
+				for (var i = idList.length; i > 0; i--) {
+					if (idList[i - 1][0] == id) {
+						idList[i - 1][1].openPopup();
+						break;
+					}
+				}
+
+			}
+		}
+
+		function checkBoxFollow() {
+			var fid = document.getElementById("followID").value;
+			var checkbox = document.getElementById("followId");
+
+			if (fid != "") {
+
+				if (checkbox.checked) {
+					checkbox.checked = false;
+				} else {
+					checkbox.checked = true;
+				}
+			}
+
+		}
+
+		var showDetailId;
+
+		function showDetails() {
+			showDetailId = document.getElementById("itemToShowDetails").value;
+			showDetailsText.value = "";
+
+			if (showDetailId != "") {
+				showDetailFlag = true;
+				ini();
+			}
+
+		}
+
+		function enableGraph() {
+			graphFlag = true;
+
+		}
+
+		var graphFlag = false;
+
+		function showDetailsUpdater(id, lon, lat, speed) {
+
+			showDetailsText.value += "Lon.: " + lon + "\nLat. : " + lat
+					+ "\nSpeed : " + speed + "\n" + "|||||||||||||||||||||||\n";
+			var textarea2 = document.getElementById('showDetailsText');
+			textarea2.scrollTop = textarea2.scrollHeight;
+
+			if (graphFlag) {
+
+				var x = (new Date()).getTime(), // current time
+				y = parseFloat(speed);
+				series.addPoint([ x, y ], true, true);
+
+			}
+		}
+
+		function resetMap() {
+			polylineLayer.clearLayers();
+			markerLayer.clearLayers();
+			idList.length = 0;
+			idListArea.value = "";
+
+		}
+
+		function getDetails() {
+			if (document.getElementById('optionsRadios1').checked) {
+
+				alertDetails.value = "";
+				//rate_value = document.getElementById('r1').value;
+				for (var l = speedAlertedlist.length; l > 0; l--) {
+					// alert(speedAlertedlist.length);
+					alertDetails.value += "|||||||\nVehicle ID : "
+							+ speedAlertedlist[l - 1][0]
+							+ "\nLast Speeding Point : \nLat : "
+							+ speedAlertedlist[l - 1][1] + "\nLon : "
+							+ speedAlertedlist[l - 1][2] + "\n";
+				}
+			}
+			if (document.getElementById('optionsRadios3').checked) {
+				//rate_value = document.getElementById('r1').value;
+				for (var l = stationedList.length; l > 0; l--) {
+					alertDetails.value += "|||||||\nVehicle ID : "
+							+ stationedList[l - 1][0]
+							+ "\nBuffer Location : \nLat : "
+							+ stationedList[l - 1][1] + "\nLon : "
+							+ stationedList[l - 1][2] + "\n";
+				}
+			}
+
+			if (document.getElementById('optionsRadios2').checked) {
+				//rate_value = document.getElementById('r1').value;
+				for (var l = proxymintyList.length; l > 0; l--) {
+					alertDetails.value += "|||||||\nVehicle ID : "
+							+ proxymintyList[l - 1][0]
+							+ "\nProximity Alert triggered at : \nLat : "
+							+ proxymintyList[l - 1][1] + "\nLon : "
+							+ proxymintyList[l - 1][2] + "\n"
+							+ "with vehicle id : " + proxymintyList[l - 1][3]
+							+ "\n"
+				}
+			}
+
+		}
+
+		function followScenario(id) {
+
+			var showFlag = document.getElementById("showAlert");
+			var showFlag2 = document.getElementById("maxSpeed");
+			var showFlag3 = document.getElementById("maxStationed");
+			var showFlag4 = document.getElementById("proximity");
+
+			if (showFlag.checked && showFlag2.checked && id == "maxSpeed") {
+				document.getElementById("followID").value = "1";
+				document.getElementById("itemToShowDetails").value = "1";
+				enableGraph();
+				showDetails();
+				followID();
+				document.getElementById('drawPath').checked = true;
+				document.getElementById('followId').checked = true;
+
+			}
+
+			else if (showFlag.checked && showFlag3.checked
+					&& id == "maxStationed") {
+				document.getElementById("followID").value = "2";
+				document.getElementById("itemToShowDetails").value = "2";
+				enableGraph();
+				showDetails();
+				followID();
+				document.getElementById('drawPath').checked = true;
+				document.getElementById('followId').checked = true;
+
+			}
+
+			else if (showFlag.checked && showFlag4.checked && id == "proximity") {
+
+				document.getElementById("followID").value = "3";
+				document.getElementById("itemToShowDetails").value = "3";
+				enableGraph();
+				showDetails();
+				followID();
+				document.getElementById('drawPath').checked = true;
+				document.getElementById('followId').checked = true;
+			} else {
+				checkBoxFollow();
+			}
+		}
+
+		function checkBoxChecker(id) {
+
+			var showFlag = document.getElementById("showAlert");
+			var showFlag2 = document.getElementById("maxSpeed");
+			var showFlag3 = document.getElementById("maxStationed");
+			var showFlag4 = document.getElementById("proximity");
+
+			//alert("AAAA : "+id);
+			if (id == "maxSpeed") {
+				showFlag3.checked = false;
+				showFlag4.checked = false;
+			}
+			if (id == "maxStationed") {
+				showFlag2.checked = false;
+				showFlag4.checked = false;
+			}
+			if (id == "proximity") {
+				showFlag3.checked = false;
+				showFlag2.checked = false;
+			}
+
+		}
+	</script>
+
+
+	<script type="text/javascript">
+		//Scripts for the Graph
+
+		function ini() {
+
+			Highcharts.setOptions({
+				global : {
+					useUTC : false
+				}
+			});
+
+			// Create the chart
+			$('#container').highcharts('StockChart', {
+				chart : {
+					events : {
+						load : function() {
+
+							series = this.series[0];
+						}
+					}
+				},
+
+				rangeSelector : {
+					enabled : false
+				},
+
+				title : {
+					text : 'Speed Data'
+				},
+
+				exporting : {
+					enabled : false
+				},
+
+				series : [ {
+					name : 'Speed Data',
+					data : (function() {
+						// generate an array of random data
+						var data = [], time = (new Date()).getTime(), i;
+
+						for (i = -100; i <= 0; i++) {
+							data.push([ time + i * 1000, 0 ]);
+						}
+						return data;
+					})()
+				} ]
+			});
+		}
+	</script>
+</body>
+</html>
