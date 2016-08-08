@@ -10,6 +10,8 @@ public class FileGenerator {
 	private static final int ITERATIONS = 100000;
 	
 	private static final int RECORD_COUNT = 8;
+	
+	String targetFilePath = "/home/yasassri/Desktop/vfs-test/in/file10.txt";
 
 	public static void main(String[] args) throws Exception {
 		Writer writer = null;
@@ -26,7 +28,7 @@ public class FileGenerator {
 				Record = tmpRecord;
 			}
 
-			File file = new File("/home/yasassri/Desktop/vfs-test/in/file10.txt");
+			File file = new File(targetFilePath);
 			writer = new BufferedWriter(new FileWriter(file));
 			for (int i = 0; i <= ITERATIONS; i++) {
 				writer.write(Record+"\n");
